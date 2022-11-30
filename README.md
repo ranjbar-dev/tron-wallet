@@ -3,7 +3,7 @@ tron wallet package for creating and generating wallet, transferring TRX, gettin
 
 ### Installation 
 ```
-go get github.com/ranjbar-dev/tron-wallet@v1.0.1
+go get github.com/ranjbar-dev/tron-wallet@v1.0.2
 ```
 
 ### Test
@@ -62,6 +62,7 @@ Example
                 "from_address": "TJnsY5bGiwuPCQFismQDwyVTPAn7M88888",
                 "to_address": "TY3PJu3VY8xVUc5BjYwJtyRgP7TfivV666",
                 "amount": "195500", // sun
+                "confirmations": 1,
                 "symbol": "TRX",
             },
             {
@@ -69,6 +70,7 @@ Example
                 "from_address": "TSw5FSuWhTAcaJmBUVFY9fUY4ihwx588b6",
                 "to_address": "TJnsY5bGiwuPCQFismQDwyVTPAn7M88888",
                 "amount": "10000", // in token sub value 
+                "confirmations": 1,
                 "symbol": "USDT",
             },
         }

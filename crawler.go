@@ -29,11 +29,12 @@ type CrawlResult struct {
 }
 
 type CrawlTransaction struct {
-	TxId        string
-	FromAddress string
-	ToAddress   string
-	Amount      int64
-	Symbol      string
+	TxId          string
+	Confirmations int64
+	FromAddress   string
+	ToAddress     string
+	Amount        int64
+	Symbol        string
 }
 
 func (c *Crawler) ScanBlocks(count int) ([]CrawlResult, error) {
@@ -53,19 +54,20 @@ func (c *Crawler) ScanBlocks(count int) ([]CrawlResult, error) {
 	}
 
 	// check block for transaction
-	allTransactions = append(allTransactions, c.extractOurTransactionsFromBlock(block))
+	allTransactions = append(allTransactions, c.extractOurTransactionsFromBlock(block, 0))
 	if err != nil {
 		return nil, err
 	}
 
+	currentBlock := block.BlockHeader.RawData.Number
 	blockNumber := block.BlockHeader.RawData.Number
 
 	for i := count; i > 0; i-- {
-		wg.Add(1)
-		blockNumber = blockNumber - 1
 		// sleep to avoid 503 error
 		time.Sleep(100 * time.Millisecond)
-		go c.getBlockData(&wg, client, &allTransactions, blockNumber)
+		blockNumber = blockNumber - 1
+		wg.Add(1)
+		go c.getBlockData(&wg, client, &allTransactions, blockNumber, currentBlock)
 	}
 
 	wg.Wait()
@@ -88,11 +90,17 @@ func (c *Crawler) ScanBlocksFromTo(from int, to int) ([]CrawlResult, error) {
 		return nil, err
 	}
 
+	block, err := client.GetNowBlock()
+	if err != nil {
+		return nil, err
+	}
+	currentBlock := block.BlockHeader.RawData.Number
+
 	for i := to; i > from; i-- {
-		wg.Add(1)
 		// sleep to avoid 503 error
+		wg.Add(1)
 		time.Sleep(100 * time.Millisecond)
-		go c.getBlockData(&wg, client, &allTransactions, int64(i))
+		go c.getBlockData(&wg, client, &allTransactions, int64(i), currentBlock)
 	}
 
 	wg.Wait()
@@ -102,7 +110,7 @@ func (c *Crawler) ScanBlocksFromTo(from int, to int) ([]CrawlResult, error) {
 
 // ==================== private ==================== //
 
-func (c *Crawler) getBlockData(wg *sync.WaitGroup, client *grpcClient.GrpcClient, allTransactions *[][]CrawlTransaction, num int64) {
+func (c *Crawler) getBlockData(wg *sync.WaitGroup, client *grpcClient.GrpcClient, allTransactions *[][]CrawlTransaction, num int64, currentBlock int64) {
 
 	defer wg.Done()
 
@@ -113,10 +121,10 @@ func (c *Crawler) getBlockData(wg *sync.WaitGroup, client *grpcClient.GrpcClient
 	}
 
 	// check block for transaction
-	*allTransactions = append(*allTransactions, c.extractOurTransactionsFromBlock(block))
+	*allTransactions = append(*allTransactions, c.extractOurTransactionsFromBlock(block, currentBlock))
 }
 
-func (c *Crawler) extractOurTransactionsFromBlock(block *api.BlockExtention) []CrawlTransaction {
+func (c *Crawler) extractOurTransactionsFromBlock(block *api.BlockExtention, currentBlock int64) []CrawlTransaction {
 
 	var txs []CrawlTransaction
 
@@ -153,6 +161,10 @@ func (c *Crawler) extractOurTransactionsFromBlock(block *api.BlockExtention) []C
 				continue
 			}
 			crawlTransaction = c.prepareTrc20Transaction(t, contract)
+		}
+
+		if crawlTransaction != nil && currentBlock != 0 {
+			crawlTransaction.Confirmations = currentBlock - block.BlockHeader.RawData.Number
 		}
 
 		if crawlTransaction != nil {
