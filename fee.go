@@ -33,4 +33,5 @@ func EstimateTrc10TransactionFee(node enums.Node, privateKey *ecdsa.PrivateKey, 
 
 func EstimateTrc20TransactionFee(node enums.Node, privateKey *ecdsa.PrivateKey, fromAddressBase58 string, toAddressBase58 string, amountInSun int64) (int64, error) {
 
+	return 0, nil
 }

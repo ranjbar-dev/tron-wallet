@@ -4,7 +4,6 @@ import (
 	"crypto/ecdsa"
 	"errors"
 	"fmt"
-	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ranjbar-dev/tron-wallet/enums"
@@ -186,30 +185,14 @@ func (t *TronWallet) Transfer(toAddressBase58 string, amountInSun int64) (string
 	return hexutil.Encode(tx.GetTxid())[2:], nil
 }
 
-func (t *TronWallet) TransferTRC20(token *Token, toAddressBase58 string, amountInTRC20 *big.Int) (string, error) {
-
-	c, err := grpcClient.GetGrpcClient(t.Node)
-	if err != nil {
-		return "", err
-	}
-
-	toAddress, err := util.Base58ToAddress(toAddressBase58)
-	if err != nil {
-		return "", err
-	}
-
-	ab := common.LeftPadBytes(amountInTRC20.Bytes(), 32)
-
-	req := trc20TransferMethodSignature + "0000000000000000000000000000000000000000000000000000000000000000"[len(toAddress.Hex())-4:] + toAddress.Hex()[4:]
-
-	req += common.Bytes2Hex(ab)
-
-	tx, err := c.TRC20Call(t.AddressBase58, token.ContractAddress.Base58(), req, false, trc20FeeLimit)
-	if err != nil {
-		return "", err
-	}
+func (t *TronWallet) TransferTRC20(token *Token, toAddressBase58 string, amountInTRC20 int64) (string, error) {
 
 	privateKey, err := t.PrivateKeyRCDSA()
+	if err != nil {
+		return "", err
+	}
+
+	tx, err := createTrc20TransactionInput(t.Node, t.AddressBase58, token, toAddressBase58, big.NewInt(amountInTRC20))
 	if err != nil {
 		return "", err
 	}

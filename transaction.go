@@ -4,10 +4,13 @@ import (
 	"crypto/ecdsa"
 	"crypto/sha256"
 	"fmt"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ranjbar-dev/tron-wallet/enums"
 	"github.com/ranjbar-dev/tron-wallet/grpcClient"
 	"github.com/ranjbar-dev/tron-wallet/grpcClient/proto/api"
+	"github.com/ranjbar-dev/tron-wallet/util"
+	"math/big"
 )
 
 import (
@@ -23,6 +26,27 @@ func createTransactionInput(node enums.Node, fromAddressBase58 string, toAddress
 	}
 
 	return c.Transfer(fromAddressBase58, toAddressBase58, amountInSun)
+}
+
+func createTrc20TransactionInput(node enums.Node, fromAddressBase58 string, token *Token, toAddressBase58 string, amountInTrc20 *big.Int) (*api.TransactionExtention, error) {
+
+	c, err := grpcClient.GetGrpcClient(node)
+	if err != nil {
+		return nil, err
+	}
+
+	toAddress, err := util.Base58ToAddress(toAddressBase58)
+	if err != nil {
+		return nil, err
+	}
+
+	ab := common.LeftPadBytes(amountInTrc20.Bytes(), 32)
+
+	req := trc20TransferMethodSignature + "0000000000000000000000000000000000000000000000000000000000000000"[len(toAddress.Hex())-4:] + toAddress.Hex()[4:]
+
+	req += common.Bytes2Hex(ab)
+
+	return c.TRC20Call(fromAddressBase58, token.ContractAddress.Base58(), req, false, trc20FeeLimit)
 }
 
 func signTransaction(transaction *api.TransactionExtention, privateKey *ecdsa.PrivateKey) (*api.TransactionExtention, error) {

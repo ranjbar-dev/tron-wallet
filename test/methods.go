@@ -3,7 +3,6 @@ package test
 import (
 	tronWallet "github.com/ranjbar-dev/tron-wallet"
 	"github.com/ranjbar-dev/tron-wallet/enums"
-	"math/big"
 )
 
 var node = enums.SHASTA_NODE
@@ -14,7 +13,7 @@ var invalidOwnerAddress = "T2w5FSuWhxcaJmBUVFY93UY4ihwx55668b6"
 var validToAddress = "TJnsY5bGiwuPCQFismQDwyVTPAn7M88888"
 var invalidToAddress = "TJnsY5bGiwuPCQQDwyVTPAnM88888"
 var trxAmount int64 = 10000
-var trc20Amount = big.NewInt(10000)
+var trc20Amount int64 = 10000
 
 func wallet() *tronWallet.TronWallet {
 	w, _ := tronWallet.CreateTronWallet(node, validPrivateKey)
