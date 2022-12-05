@@ -3,7 +3,7 @@ tron wallet package for creating and generating wallet, transferring TRX, gettin
 
 ### Installation 
 ```
-go get github.com/ranjbar-dev/tron-wallet@v1.0.2
+go get github.com/ranjbar-dev/tron-wallet@v1.0.5
 ```
 
 ### Test
@@ -80,6 +80,19 @@ Example
 * // 
 	
 ```
+
+Estimate transfer trx fee
+```
+feeInSun,err := w.EstimateTransferFee("TJnsY5bGiwuPCQFismQDwyVTPAn7M88888",10000)
+feeInSun // int64
+```
+
+Estimate transfer trc20 fee
+```
+feeInSun,err := w.EstimateTransferTRC20Fee()
+feeInSun // int64
+```
+
 - transfer trx from wallet 
 ```
 txId, err := w.Transfer(toAddressBase58, amount)

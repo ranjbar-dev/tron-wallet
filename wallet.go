@@ -185,6 +185,16 @@ func (t *TronWallet) Transfer(toAddressBase58 string, amountInSun int64) (string
 	return hexutil.Encode(tx.GetTxid())[2:], nil
 }
 
+func (t *TronWallet) EstimateTransferFee(toAddressBase58 string, amountInSun int64) (int64, error) {
+
+	privateKey, err := t.PrivateKeyRCDSA()
+	if err != nil {
+		return 0, err
+	}
+
+	return estimateTrc10TransactionFee(t.Node, privateKey, t.AddressBase58, toAddressBase58, amountInSun)
+}
+
 func (t *TronWallet) TransferTRC20(token *Token, toAddressBase58 string, amountInTRC20 int64) (string, error) {
 
 	privateKey, err := t.PrivateKeyRCDSA()
@@ -208,4 +218,9 @@ func (t *TronWallet) TransferTRC20(token *Token, toAddressBase58 string, amountI
 	}
 
 	return hexutil.Encode(tx.GetTxid())[2:], nil
+}
+
+func (t *TronWallet) EstimateTransferTRC20Fee() (int64, error) {
+
+	return estimateTrc20TransactionFee()
 }
