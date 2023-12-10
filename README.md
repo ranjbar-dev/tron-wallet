@@ -14,21 +14,38 @@ go test ./test
 
 ### Wallet methods 
 - generating tron wallet 
-```
+```go
 w := GenerateTronWallet(enums.SHASTA_NODE)
-w.Address // strnig 
-w.AddressBase58 // strnig 
-w.PrivateKey // strnig 
-w.PublicKey // strnig 
+w.Address // string 
+w.AddressBase58 // string 
+w.PrivateKey // string 
+w.PublicKey // string 
 ```
 - creating tron wallet from private key 
-```
+```go
 w := CreateTronWallet(enums.SHASTA_NODE,privateKeyHex)
-w.Address // strnig 
-w.AddressBase58 // strnig 
-w.PrivateKey // strnig 
-w.PublicKey // strnig 
+w.Address // string 
+w.AddressBase58 // string 
+w.PrivateKey // string 
+w.PublicKey // string 
 ```
+
+- generating mnemonic 
+```go
+mnenomic := tronWallet.GenerateMnemonic(12)
+// net uncle rigid useless coast explain saddle crawl pupil erase veteran slender
+```
+- creating tron wallet from mnemonic with account path
+```go
+mnemonic := "net uncle rigid useless coast explain saddle crawl pupil erase veteran slender"
+wallet, _ := tronWallet.MnemonicToTronWallet(enums.NILE_NODE, mnemonic, "m/44'/195'/3'/0/1", "")
+
+wallet.AddressBase58 // TXTaWVTCMAEjC35S6sLF5gi6ZKVrxAkmGX
+wallet.Address  // 41ebb83dedb47dc852a5e2863acaf7b11989bc07a9
+wallet.PrivateKey // 900b8fc4c8c83a9baffc40917aa1a029eb4b75215d05d0de92e365b907f27c22
+wallet.PublicKey //04487ff8ed9de594a4148dfe0f83b7320e069fa66848f078f90270b695022c671af47417004b4cdd53487e8def2ebb6fe696fd883e48d68a0ed1bed9a3459f4a01
+```
+
 - getting wallet trx balance 
 ```
 balanceInSun,err := w.Balance()

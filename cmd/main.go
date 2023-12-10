@@ -13,7 +13,7 @@ func main() {
 	w, _ := tronWallet.CreateTronWallet(enums.SHASTA_NODE, "88414dbb373a211bc157265a267f3de6a4cec210f3a5da12e89630f2c447ad27")
 
 	fmt.Println(w.EstimateTransferFee("TJnsY5bGiwuPCQFismQDwyVTPAn7M88888", 1000))
-	fmt.Println(w.EstimateTransferERC20Fee())
+	fmt.Println(w.EstimateTransferTRC20Fee())
 	//priv, _ := w.PrivateKeyRCDSA()
 	//
 	//fmt.Println(tronWallet.EstimateTrc10TransactionFee(enums.SHASTA_NODE, priv, w.AddressBase58, "TJnsY5bGiwuPCQFismQDwyVTPAn7M88888", 10000))

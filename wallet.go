@@ -2,6 +2,7 @@ package tronWallet
 
 import (
 	"crypto/ecdsa"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -9,7 +10,11 @@ import (
 	"github.com/ranjbar-dev/tron-wallet/enums"
 	"github.com/ranjbar-dev/tron-wallet/grpcClient"
 	"github.com/ranjbar-dev/tron-wallet/util"
+	"github.com/tyler-smith/go-bip32"
+	"github.com/tyler-smith/go-bip39"
 	"math/big"
+	"strconv"
+	"strings"
 )
 
 type TronWallet struct {
@@ -21,6 +26,69 @@ type TronWallet struct {
 }
 
 // generating
+func GenerateMnemonic(numberOfWords int) string {
+	words2strength := map[int]int{
+		12: 128,
+		15: 160,
+		18: 192,
+		21: 224,
+		24: 256,
+	}
+	var bitSize, ok = words2strength[numberOfWords]
+	if !ok {
+		panic("invalid number of words")
+	}
+
+	entropy, _ := bip39.NewEntropy(bitSize)
+	mnemonic, _ := bip39.NewMnemonic(entropy)
+	return mnemonic
+}
+
+func MnemonicToTronWallet(node enums.Node, mnemonic, accountPath, passphrase string) (*TronWallet, error) {
+	seed := bip39.NewSeed(mnemonic, passphrase)
+	masterKey, err := bip32.NewMasterKey(seed)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create master bip32Key: %w", err)
+	}
+
+	// Split the path and parse each component
+	segments := strings.Split(accountPath, "/")
+	var bip32Key = masterKey
+	for _, segment := range segments[1:] { // skipping the 'm' part
+		var hardened bool
+		if strings.HasSuffix(segment, "'") {
+			hardened = true
+			segment = segment[:len(segment)-1]
+		}
+
+		index, err := strconv.Atoi(segment)
+		if err != nil {
+			return nil, fmt.Errorf("invalid path segment '%s': %w", segment, err)
+		}
+
+		if hardened {
+			bip32Key, err = bip32Key.NewChildKey(uint32(index) + bip32.FirstHardenedChild)
+		} else {
+			bip32Key, err = bip32Key.NewChildKey(uint32(index))
+		}
+		if err != nil {
+			return nil, fmt.Errorf("failed to derive bip32Key at %s: %w", segment, err)
+		}
+	}
+
+	privkey, _ := crypto.HexToECDSA(hex.EncodeToString(bip32Key.Key))
+	publicKeyHex := convertPublicKeyToHex(privkey.Public().(*ecdsa.PublicKey))
+	address := getAddressFromPublicKey(privkey.Public().(*ecdsa.PublicKey))
+	addressBase58 := util.HexToBase58(address)
+
+	return &TronWallet{
+		Node:          node,
+		Address:       address,
+		AddressBase58: addressBase58,
+		PrivateKey:    hex.EncodeToString(bip32Key.Key),
+		PublicKey:     publicKeyHex,
+	}, nil
+}
 
 func GenerateTronWallet(node enums.Node) *TronWallet {
 
@@ -128,7 +196,7 @@ func getAddressFromPublicKey(publicKey *ecdsa.PublicKey) string {
 
 	address = "41" + address[2:]
 
-	return address
+	return strings.ToLower(address)
 }
 
 // balance
