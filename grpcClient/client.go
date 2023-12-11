@@ -8,6 +8,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/metadata"
+	"os"
 	"time"
 )
 
@@ -26,6 +27,7 @@ func GetGrpcClient(node enums.Node) (*GrpcClient, error) {
 	c := &GrpcClient{
 		Address:     string(node),
 		grpcTimeout: 5 * time.Second,
+		apiKey:      os.Getenv("TRON_PRO_API_KEY"),
 	}
 
 	err := c.Start(grpc.WithTransportCredentials(insecure.NewCredentials()))

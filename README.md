@@ -3,7 +3,7 @@ tron wallet package for creating and generating wallet, transferring TRX, gettin
 
 ### Installation 
 ```
-go get github.com/ranjbar-dev/tron-wallet@v1.0.5
+go get github.com/ranjbar-dev/tron-wallet@v1.0.6
 ```
 
 ### Test
@@ -13,6 +13,8 @@ go test ./test
 ```
 
 ### Wallet methods 
+**Set [environment variables](https://developers.tron.network/reference/select-network) `TRON_PRO_API_KEY` in production if you want to avoid rate limit.**
+
 - generating tron wallet 
 ```go
 w := GenerateTronWallet(enums.SHASTA_NODE)
