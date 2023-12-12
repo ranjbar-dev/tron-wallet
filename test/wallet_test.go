@@ -2,6 +2,8 @@ package test
 
 import (
 	tronWallet "github.com/ranjbar-dev/tron-wallet"
+	"github.com/stretchr/testify/assert"
+	"strings"
 	"testing"
 )
 
@@ -48,6 +50,38 @@ func TestCreateWallet(t *testing.T) {
 	if len(w.AddressBase58) == 0 {
 		t.Errorf("CreateTronWallet AddressBase58 was incorect, got: %q, want: %q.", w.AddressBase58, "valid AddressBase58")
 	}
+}
+
+func TestGenerateMnemonic(t *testing.T) {
+	var mnemonic string
+	mnemonic = tronWallet.GenerateMnemonic(12)
+	assert.Len(t, strings.Split(mnemonic, " "), 12)
+
+	mnemonic = tronWallet.GenerateMnemonic(15)
+	assert.Len(t, strings.Split(mnemonic, " "), 15)
+
+	mnemonic = tronWallet.GenerateMnemonic(18)
+	assert.Len(t, strings.Split(mnemonic, " "), 18)
+
+	mnemonic = tronWallet.GenerateMnemonic(21)
+	assert.Len(t, strings.Split(mnemonic, " "), 21)
+
+	mnemonic = tronWallet.GenerateMnemonic(24)
+	assert.Len(t, strings.Split(mnemonic, " "), 24)
+}
+
+func TestMnemonicToTronWallet(t *testing.T) {
+	var mnemonic string = "net uncle rigid useless coast explain saddle crawl pupil erase veteran slender"
+
+	w, err := tronWallet.MnemonicToTronWallet(node, mnemonic, "m/44'/195'/3'/0/1", "")
+
+	assert.Nil(t, err)
+	assert.Equal(t, "TXTaWVTCMAEjC35S6sLF5gi6ZKVrxAkmGX", w.AddressBase58)
+	assert.Equal(t, "41ebb83dedb47dc852a5e2863acaf7b11989bc07a9", w.Address)
+	assert.Equal(t, "900b8fc4c8c83a9baffc40917aa1a029eb4b75215d05d0de92e365b907f27c22", w.PrivateKey)
+	assert.Equal(t,
+		"04487ff8ed9de594a4148dfe0f83b7320e069fa66848f078f90270b695022c671af47417004b4cdd53487e8def2ebb6fe696fd883e48d68a0ed1bed9a3459f4a01",
+		w.PublicKey)
 }
 
 // PrivateKeyRCDSA test
