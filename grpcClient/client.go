@@ -3,14 +3,19 @@ package grpcClient
 import (
 	"context"
 	"fmt"
+	"os"
+	"sync"
+	"time"
+
 	"github.com/ranjbar-dev/tron-wallet/enums"
 	"github.com/ranjbar-dev/tron-wallet/grpcClient/proto/api"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/metadata"
-	"os"
-	"time"
 )
+
+var c *GrpcClient
+var mutex sync.Mutex
 
 // GrpcClient controller structure
 type GrpcClient struct {
@@ -24,13 +29,25 @@ type GrpcClient struct {
 
 func GetGrpcClient(node enums.Node) (*GrpcClient, error) {
 
-	c := &GrpcClient{
+	mutex.Lock()
+	defer mutex.Unlock()
+
+	if c != nil {
+		return c, nil
+	}
+
+	temp := &GrpcClient{
 		Address:     string(node),
 		grpcTimeout: 5 * time.Second,
 		apiKey:      os.Getenv("TRON_PRO_API_KEY"),
 	}
 
-	err := c.Start(grpc.WithTransportCredentials(insecure.NewCredentials()))
+	err := temp.Start(grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		return nil, err
+	}
+
+	c = temp
 
 	return c, err
 }
