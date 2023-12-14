@@ -1,4 +1,4 @@
-![image](https://github.com/ranjbar-dev/tron-wallet/tree/main/assets/image.png)
+![image](https://github.com/ranjbar-dev/tron-wallet/blob/main/assets/image.png?raw=true)
 
 
 # tron-wallet
