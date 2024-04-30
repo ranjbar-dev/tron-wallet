@@ -34,6 +34,11 @@ func GeneratePrivateKey() (*ecdsa.PrivateKey, error) {
 	return crypto.GenerateKey()
 }
 
+func HexToPrivateKey(hex string) (*ecdsa.PrivateKey, error) {
+
+	return crypto.HexToECDSA(hex)
+}
+
 func PrivateKeyToHex(privateKey *ecdsa.PrivateKey) string {
 
 	privateKeyBytes := crypto.FromECDSA(privateKey)

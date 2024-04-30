@@ -2,13 +2,11 @@ package main
 
 import (
 	"fmt"
-
-	tronwallet "github.com/ranjbar-dev/tron-wallet"
 )
 
 func main() {
 
-	privateKey, _ := tronwallet.GeneratePrivateKey()
+	temp := []byte("43655744")
 
-	fmt.Println(privateKey)
+	fmt.Println(temp[5], temp[6])
 }

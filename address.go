@@ -7,6 +7,16 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
+func PublicKeyToAddress(publicKey *ecdsa.PublicKey) *Address {
+
+	temp := Address{
+		Hex:    PublicKeyToAddressHex(publicKey),
+		Base58: PublicKeyToAddressBase58(publicKey),
+	}
+
+	return &temp
+}
+
 func PublicKeyToAddressHex(publicKey *ecdsa.PublicKey) string {
 
 	address := crypto.PubkeyToAddress(*publicKey).Hex()
