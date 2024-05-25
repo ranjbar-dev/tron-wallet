@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	tronWallet "github.com/ranjbar-dev/tron-wallet"
 	"github.com/ranjbar-dev/tron-wallet/enums"
 )
@@ -26,5 +27,5 @@ func main() {
 
 	fmt.Println(w.TransferTRC20(&tronWallet.Token{
 		ContractAddress: enums.SHASTA_Tether_USDT,
-	}, "TJnsY5bGiwuPCQFismQDwyVTPAn7M88888", 10))
+	}, "TJnsY5bGiwuPCQFismQDwyVTPAn7M88888", 10, 0))
 }

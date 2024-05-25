@@ -5,12 +5,13 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
-	"github.com/golang/protobuf/proto"
+	"math/big"
+	"unicode/utf8"
+
 	"github.com/ranjbar-dev/tron-wallet/grpcClient/proto/api"
 	"github.com/ranjbar-dev/tron-wallet/grpcClient/proto/core"
 	"github.com/ranjbar-dev/tron-wallet/util"
-	"math/big"
-	"unicode/utf8"
+	"google.golang.org/protobuf/proto"
 )
 
 // TRC20Call make constant call

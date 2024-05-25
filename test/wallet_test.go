@@ -1,10 +1,11 @@
 package test
 
 import (
-	tronWallet "github.com/ranjbar-dev/tron-wallet"
-	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
+
+	tronWallet "github.com/ranjbar-dev/tron-wallet"
+	"github.com/stretchr/testify/assert"
 )
 
 // GenerateTronWallet test
@@ -150,12 +151,12 @@ func TestTransferTRC20(t *testing.T) {
 	w := wallet()
 	_t := token()
 
-	_, err := w.TransferTRC20(_t, invalidToAddress, trc20Amount)
+	_, err := w.TransferTRC20(_t, invalidToAddress, trc20Amount, 0)
 	if err == nil {
 		t.Errorf("TestTransferTRC20 error was incorect, got: %q, want: %q.", err, "not nil becuase to address is invalid")
 	}
 
-	txId, err := w.TransferTRC20(_t, validToAddress, trc20Amount)
+	txId, err := w.TransferTRC20(_t, validToAddress, trc20Amount, 0)
 	if err != nil {
 		t.Errorf("Transfer error was incorect, got: %q, want: %q.", err, "nil")
 	}

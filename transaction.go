@@ -26,7 +26,10 @@ func createTransactionInput(node enums.Node, fromAddressBase58 string, toAddress
 	return c.Transfer(fromAddressBase58, toAddressBase58, amountInSun)
 }
 
-func createTrc20TransactionInput(node enums.Node, fromAddressBase58 string, token *Token, toAddressBase58 string, amountInTrc20 *big.Int) (*api.TransactionExtention, error) {
+func createTrc20TransactionInput(node enums.Node, fromAddressBase58 string, token *Token, toAddressBase58 string, amountInTrc20 *big.Int, feeLimit int64) (*api.TransactionExtention, error) {
+	if feeLimit < 1 {
+		feeLimit = trc20FeeLimit
+	}
 
 	c, err := grpcClient.GetGrpcClient(node)
 	if err != nil {
@@ -44,7 +47,7 @@ func createTrc20TransactionInput(node enums.Node, fromAddressBase58 string, toke
 
 	req += common.Bytes2Hex(ab)
 
-	return c.TRC20Call(fromAddressBase58, token.ContractAddress.Base58(), req, false, trc20FeeLimit)
+	return c.TRC20Call(fromAddressBase58, token.ContractAddress.Base58(), req, false, feeLimit)
 }
 
 func signTransaction(transaction *api.TransactionExtention, privateKey *ecdsa.PrivateKey) (*api.TransactionExtention, error) {
