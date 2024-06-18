@@ -122,7 +122,7 @@ txId // string
 ```
 - transfer trc20 from wallet
 ```
-txId, err := w.TransferTRC20(token, toAddressBase58, amount)
+txId, err := w.TransferTRC20(token, toAddressBase58, amount, feeLimit)
 txId // string 
 ```
 
