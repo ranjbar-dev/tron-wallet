@@ -15,7 +15,7 @@ import (
 )
 
 var c *GrpcClient
-var mutex sync.Mutex
+var singleton sync.Once
 
 // GrpcClient controller structure
 type GrpcClient struct {
@@ -29,25 +29,21 @@ type GrpcClient struct {
 
 func GetGrpcClient(node enums.Node) (*GrpcClient, error) {
 
-	mutex.Lock()
-	defer mutex.Unlock()
+	var err error
 
-	if c != nil {
-		return c, nil
-	}
+	singleton.Do(func() {
+		temp := &GrpcClient{
+			Address:     string(node),
+			grpcTimeout: 5 * time.Second,
+			apiKey:      os.Getenv("TRON_PRO_API_KEY"),
+		}
 
-	temp := &GrpcClient{
-		Address:     string(node),
-		grpcTimeout: 5 * time.Second,
-		apiKey:      os.Getenv("TRON_PRO_API_KEY"),
-	}
+		if e := temp.Start(grpc.WithTransportCredentials(insecure.NewCredentials())); e != nil {
+			err = e
+		}
 
-	err := temp.Start(grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		return nil, err
-	}
-
-	c = temp
+		c = temp
+	})
 
 	return c, err
 }
