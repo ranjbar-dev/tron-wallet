@@ -49,6 +49,10 @@ you can create any transaction from `github.com/fbsobreira` and sign and broadca
 
 `BroadcastTransaction(client *client.GrpcClient, transaction *api.TransactionExtention) (*api.Return, error)`
 
+### TODOS 
+
+- writing test 
+
 ### TRX Faucet
 
 Follow TronTestnet Twitter account @TronTest2 . Write your address in your tweet and @TronTest2 . They will transfer 10,000 test TRX (usually within five minutes). Each address can only be obtained once a day. If you need TRX for the nile testnet, please add "NILE" in your tweet.
