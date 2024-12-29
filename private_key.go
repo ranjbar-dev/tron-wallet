@@ -2,43 +2,21 @@ package tronwallet
 
 import (
 	"crypto/ecdsa"
-	"crypto/sha256"
-	"encoding/hex"
 	"errors"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/mr-tron/base58"
 )
 
-func s256(s []byte) []byte {
-	h := sha256.New()
-	h.Write(s)
-	bs := h.Sum(nil)
-	return bs
-}
-
-func hexToBase58(str string) string {
-
-	addb, _ := hex.DecodeString(str)
-	hash1 := s256(s256(addb))
-	secret := hash1[:4]
-	for _, v := range secret {
-		addb = append(addb, v)
-	}
-	return base58.Encode(addb)
-}
-
+// GeneratePrivateKey
+// Generate a new private key
 func GeneratePrivateKey() (*ecdsa.PrivateKey, error) {
 
 	return crypto.GenerateKey()
 }
 
-func HexToPrivateKey(hex string) (*ecdsa.PrivateKey, error) {
-
-	return crypto.HexToECDSA(hex)
-}
-
+// PrivateKeyToHex
+// Convert private key to hex string
 func PrivateKeyToHex(privateKey *ecdsa.PrivateKey) string {
 
 	privateKeyBytes := crypto.FromECDSA(privateKey)
@@ -46,11 +24,29 @@ func PrivateKeyToHex(privateKey *ecdsa.PrivateKey) string {
 	return hexutil.Encode(privateKeyBytes)[2:]
 }
 
+// PrivateKeyToBytes
+// Convert private key to bytes
+func PrivateKeyToBytes(privateKey *ecdsa.PrivateKey) []byte {
+
+	return crypto.FromECDSA(privateKey)
+}
+
+// PrivateKeyFromHex
+// Convert hex string to private key
 func PrivateKeyFromHex(privateKeyHex string) (*ecdsa.PrivateKey, error) {
 
 	return crypto.HexToECDSA(privateKeyHex)
 }
 
+// PrivateKeyFromBytes
+// Convert bytes to private key
+func PrivateKeyFromBytes(privateKeyBytes []byte) (*ecdsa.PrivateKey, error) {
+
+	return crypto.ToECDSA(privateKeyBytes)
+}
+
+// PrivateKeyToPublicKey
+// Get public key from private key
 func PrivateKeyToPublicKey(privateKey *ecdsa.PrivateKey) (*ecdsa.PublicKey, error) {
 
 	publicKey := privateKey.Public()
@@ -61,11 +57,4 @@ func PrivateKeyToPublicKey(privateKey *ecdsa.PrivateKey) (*ecdsa.PublicKey, erro
 	}
 
 	return publicKeyECDSA, nil
-}
-
-func PublicKeyToHex(publicKey *ecdsa.PublicKey) string {
-
-	privateKeyBytes := crypto.FromECDSAPub(publicKey)
-
-	return hexutil.Encode(privateKeyBytes)[2:]
 }
