@@ -25,7 +25,6 @@ Avaiable functions related to private key
 
 Avaiable functions related to address 
 
-
 `PublicKeyToAddressHex(publicKey *ecdsa.PublicKey) string`
 
 `PublicKeyToAddressBase58(publicKey *ecdsa.PublicKey) string`
