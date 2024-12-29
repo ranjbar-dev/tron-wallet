@@ -50,6 +50,14 @@ you can create any transaction from `github.com/fbsobreira` and sign and broadca
 
 ### TODOS 
 
+- estimating trc20 and trc10 fee 
+
+- contract api calls, deploy, get name, decimals and ... 
+
+- block and transaction crawl calls 
+
+- delegate resource transaction 
+
 - writing test 
 
 ### TRX Faucet
