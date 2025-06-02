@@ -2,7 +2,6 @@
 
 ![image](https://github.com/ranjbar-dev/tron-wallet/blob/main/assets/image.png?raw=true)
 
-
 V2 is all about simplicity! I'm revamping the package to be as easy to use as possible.
 
 ### private_key.go 
@@ -37,12 +36,11 @@ PublicKeyToAddressBase58(publicKey *ecdsa.PublicKey) string
 
 ```
 
-
 ### transaction.go
 
 Avaiable functions related to transaction 
 
-you can create any transaction from `github.com/fbsobreira` and sign and broadcast it using `SignTransaction` and `BroadcastTransaction` 
+you can create any transaction from `github.com/fbsobreira/gotron-sdk` and sign and broadcast it using `SignTransaction` and `BroadcastTransaction` 
 
 ```
 
@@ -60,17 +58,9 @@ BroadcastTransaction(client *client.GrpcClient, transaction *api.TransactionExte
 
 ```
 
-### TODOS 
+### Example 
 
-- estimating trc20 and trc10 fee 
-
-- contract api calls, deploy, get name, decimals and ... 
-
-- block and transaction crawl calls 
-
-- delegate resource transaction 
-
-- writing test 
+check test files for examples and usage of this package
 
 ### TRX Faucet
 
@@ -83,6 +73,17 @@ Go to https://developers.tron.network/ and connect to the discord community. You
 ### Important
 
 I simplified this repository https://github.com/fbsobreira repository to create this package You can check go tron sdk for better examples and functionalities.
+
+### TODOS 
+
+- estimating trc20 and trc10 fee 
+
+- contract api calls, deploy, get name, decimals and ... 
+
+- block and transaction crawl calls 
+
+- delegate resource transaction 
+
 
 ### Donation
 
