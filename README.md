@@ -2,7 +2,6 @@
 
 ![image](https://github.com/ranjbar-dev/tron-wallet/blob/main/assets/image.png?raw=true)
 
-
 V2 is all about simplicity! I'm revamping the package to be as easy to use as possible.
 
 ### private_key.go 
@@ -29,7 +28,6 @@ Avaiable functions related to address
 
 `PublicKeyToAddressBase58(publicKey *ecdsa.PublicKey) string`
 
-
 ### transaction.go
 
 Avaiable functions related to transaction 
@@ -48,9 +46,9 @@ you can create any transaction from `github.com/fbsobreira/gotron-sdk` and sign 
 
 `BroadcastTransaction(client *client.GrpcClient, transaction *api.TransactionExtention) (*api.Return, error)`
 
-### TODOS 
+### Example 
 
-- writing test for transaction
+check test files for examples and usage of this package
 
 ### TRX Faucet
 
