@@ -10,15 +10,6 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-var (
-	fromAddress              = "TQm6MTevKxyyKXzudM6UGjYqxnUmx2HiY3"
-	fromAddressPrivateKeyHex = "39252406ac52ae99a289694c4f0f9284ac5a777b5ed4d35d0f45c5e99700a61a"
-	toAddress                = "TEkxPcAR7GtkTvr8uQFgUsaFenFE2djkHB"
-	toAddressPrivateKeyHex   = "f791e692157928d8a43d8d83908b4f3444dc089b7533aba6723fbc57a7c309fa"
-	contractAddress          = "TU2T8vpHZhCNY8fXGVaHyeZrKm8s6HEXWe"
-	amount                   = big.NewInt(1000000)
-)
-
 func TestCreateTransferTransaction(t *testing.T) {
 
 	conn := client.NewGrpcClient("grpc.nile.trongrid.io:50051")
@@ -29,7 +20,7 @@ func TestCreateTransferTransaction(t *testing.T) {
 	}
 	defer conn.Stop()
 
-	_, err = CreateTransferTransaction(conn, fromAddress, toAddress, amount)
+	_, err = CreateTransferTransaction(conn, fromAddress, toAddress, big.NewInt(1000000))
 	if err != nil {
 
 		t.Fatalf("CreateTransferTransaction failed: %v", err)
@@ -47,7 +38,7 @@ func TestCreateTRC20TransferTransaction(t *testing.T) {
 	}
 	defer conn.Stop()
 
-	_, err = CreateTRC20TransferTransaction(conn, fromAddress, toAddress, contractAddress, amount, 1000000)
+	_, err = CreateTRC20TransferTransaction(conn, fromAddress, toAddress, contractAddress, big.NewInt(1000000), 1000000)
 	if err != nil {
 
 		t.Fatalf("CreateTRC20TransferTransaction failed: %v", err)
@@ -65,7 +56,7 @@ func TestCreateFreezTransaction(t *testing.T) {
 	}
 	defer conn.Stop()
 
-	_, err = CreateFreezTransaction(conn, fromAddress, core.ResourceCode_ENERGY, amount)
+	_, err = CreateFreezTransaction(conn, fromAddress, core.ResourceCode_ENERGY, big.NewInt(1000000))
 	if err != nil {
 
 		t.Fatalf("CreateFreezTransaction failed: %v", err)
@@ -83,7 +74,7 @@ func TestCreateUnfreezeTransaction(t *testing.T) {
 	}
 	defer conn.Stop()
 
-	_, err = CreateUnfreezeTransaction(conn, fromAddress, core.ResourceCode_ENERGY, amount)
+	_, err = CreateUnfreezeTransaction(conn, fromAddress, core.ResourceCode_ENERGY, big.NewInt(1000000))
 	if err != nil {
 
 		t.Fatalf("CreateUnfreezeTransaction failed: %v", err)
@@ -102,7 +93,7 @@ func TestSignTransaction(t *testing.T) {
 	defer conn.Stop()
 
 	// Here can be any type of transaction transfer, freez, unfreeze, etc.
-	transaction, err := CreateFreezTransaction(conn, fromAddress, core.ResourceCode_ENERGY, amount)
+	transaction, err := CreateFreezTransaction(conn, fromAddress, core.ResourceCode_ENERGY, big.NewInt(1000000))
 	if err != nil {
 
 		t.Fatalf("CreateFreezTransaction failed: %v", err)
@@ -131,7 +122,7 @@ func TestBroadcastTransaction(t *testing.T) {
 	}
 	defer conn.Stop()
 
-	transaction, err := CreateFreezTransaction(conn, fromAddress, core.ResourceCode_ENERGY, amount)
+	transaction, err := CreateFreezTransaction(conn, fromAddress, core.ResourceCode_ENERGY, big.NewInt(1000000))
 	if err != nil {
 
 		t.Fatalf("CreateFreezTransaction failed: %v", err)
