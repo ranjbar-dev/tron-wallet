@@ -58,6 +58,17 @@ BroadcastTransaction(client *client.GrpcClient, transaction *api.TransactionExte
 
 ```
 
+### Fee explanation
+
+- TRX transfer: if account has enough bandwidth to covert trasaction fee it is free( 5000 points ), if not it will cost 0.1 TRX. 
+
+- TRC20 transfer: consume Energy and Bandwidth, if insufficient, TRX is burned as fee.
+
+```
+Fee ≈ Energy Used × Energy Unit Price (in TRX)
+```
+
+
 ### Example 
 
 check test files for examples and usage of this package
