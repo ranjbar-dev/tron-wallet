@@ -8,25 +8,33 @@ V2 is all about simplicity! I'm revamping the package to be as easy to use as po
 
 Avaiable functions related to private key 
 
-`GeneratePrivateKey() (*ecdsa.PrivateKey, error)`
+```
 
-`PrivateKeyToHex(privateKey *ecdsa.PrivateKey) string`
+GeneratePrivateKey() (*ecdsa.PrivateKey, error)
 
-`PrivateKeyToBytes(privateKey *ecdsa.PrivateKey) []byte`
+PrivateKeyToHex(privateKey *ecdsa.PrivateKey) string
 
-`PrivateKeyFromHex(privateKeyHex string) (*ecdsa.PrivateKey, error)`
+PrivateKeyToBytes(privateKey *ecdsa.PrivateKey) []byte
 
-`PrivateKeyFromBytes(privateKeyBytes []byte) (*ecdsa.PrivateKey, error)`
+PrivateKeyFromHex(privateKeyHex string) (*ecdsa.PrivateKey, error)
 
-`PrivateKeyToPublicKey(privateKey *ecdsa.PrivateKey) (*ecdsa.PublicKey, error)`
+PrivateKeyFromBytes(privateKeyBytes []byte) (*ecdsa.PrivateKey, error)
+
+PrivateKeyToPublicKey(privateKey *ecdsa.PrivateKey) (*ecdsa.PublicKey, error)
+
+```
 
 ### address.go
 
 Avaiable functions related to address 
 
-`PublicKeyToAddressHex(publicKey *ecdsa.PublicKey) string`
+```
 
-`PublicKeyToAddressBase58(publicKey *ecdsa.PublicKey) string`
+PublicKeyToAddressHex(publicKey *ecdsa.PublicKey) string
+
+PublicKeyToAddressBase58(publicKey *ecdsa.PublicKey) string
+
+```
 
 ### transaction.go
 
@@ -34,17 +42,21 @@ Avaiable functions related to transaction
 
 you can create any transaction from `github.com/fbsobreira/gotron-sdk` and sign and broadcast it using `SignTransaction` and `BroadcastTransaction` 
 
-`CreateTransferTransaction(client *client.GrpcClient, from, to string, amount *big.Int) (*api.TransactionExtention, error)`
+```
 
-`CreateTRC20TransferTransaction(client *client.GrpcClient, from, to, contract string, amount *big.Int, feeLimit int64) (*api.TransactionExtention, error)`
+CreateTransferTransaction(client *client.GrpcClient, from, to string, amount *big.Int) (*api.TransactionExtention, error)
 
-`CreateFreezTransaction(client *client.GrpcClient, address string, resource core.ResourceCode, amount *big.Int) (*api.TransactionExtention, error)`
+CreateTRC20TransferTransaction(client *client.GrpcClient, from, to, contract string, amount *big.Int, feeLimit int64) (*api.TransactionExtention, error)
 
-`CreateUnfreezeTransaction(client *client.GrpcClient, address string, resource core.ResourceCode, amount *big.Int) (*api.TransactionExtention, error)`
+CreateFreezTransaction(client *client.GrpcClient, address string, resource core.ResourceCode, amount *big.Int) (*api.TransactionExtention, error)
 
-`SignTransaction(transaction *api.TransactionExtention, privateKey *ecdsa.PrivateKey) (*api.TransactionExtention, error)`
+CreateUnfreezeTransaction(client *client.GrpcClient, address string, resource core.ResourceCode, amount *big.Int) (*api.TransactionExtention, error)
 
-`BroadcastTransaction(client *client.GrpcClient, transaction *api.TransactionExtention) (*api.Return, error)`
+SignTransaction(transaction *api.TransactionExtention, privateKey *ecdsa.PrivateKey) (*api.TransactionExtention, error)
+
+BroadcastTransaction(client *client.GrpcClient, transaction *api.TransactionExtention) (*api.Return, error)
+
+```
 
 ### Example 
 
@@ -61,6 +73,17 @@ Go to https://developers.tron.network/ and connect to the discord community. You
 ### Important
 
 I simplified this repository https://github.com/fbsobreira repository to create this package You can check go tron sdk for better examples and functionalities.
+
+### TODOS 
+
+- estimating trc20 and trc10 fee 
+
+- contract api calls, deploy, get name, decimals and ... 
+
+- block and transaction crawl calls 
+
+- delegate resource transaction 
+
 
 ### Donation
 
