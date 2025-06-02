@@ -34,7 +34,7 @@ Avaiable functions related to address
 
 Avaiable functions related to transaction 
 
-you can create any transaction from `github.com/fbsobreira` and sign and broadcast it using `SignTransaction` and `BroadcastTransaction` 
+you can create any transaction from `github.com/fbsobreira/gotron-sdk` and sign and broadcast it using `SignTransaction` and `BroadcastTransaction` 
 
 `CreateTransferTransaction(client *client.GrpcClient, from, to string, amount *big.Int) (*api.TransactionExtention, error)`
 
@@ -50,7 +50,7 @@ you can create any transaction from `github.com/fbsobreira` and sign and broadca
 
 ### TODOS 
 
-- writing test 
+- writing test for transaction
 
 ### TRX Faucet
 
