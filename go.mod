@@ -1,4 +1,4 @@
-module github.com/ranjbar-dev/tron-wallet
+module github.com/ranjbar-dev/tron-wallet/v2
 
 go 1.22
 

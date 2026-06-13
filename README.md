@@ -4,6 +4,18 @@
 
 V2 is all about simplicity! I'm revamping the package to be as easy to use as possible.
 
+### Install
+
+```
+go get github.com/ranjbar-dev/tron-wallet/v2@latest
+```
+
+```go
+import tronwallet "github.com/ranjbar-dev/tron-wallet/v2"
+```
+
+> v2 uses the `/v2` module path (Go semantic import versioning). The v1 series stays available at `github.com/ranjbar-dev/tron-wallet`.
+
 ### private_key.go 
 
 Avaiable functions related to private key 
@@ -100,7 +112,7 @@ import (
 	"math/big"
 	"time"
 
-	tronwallet "github.com/ranjbar-dev/tron-wallet"
+	tronwallet "github.com/ranjbar-dev/tron-wallet/v2"
 )
 
 func main() {
