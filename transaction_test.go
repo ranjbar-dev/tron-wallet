@@ -25,11 +25,11 @@ func TestCreateTRC20TransferTransaction(t *testing.T) {
 	}
 }
 
-func TestCreateFreezTransaction(t *testing.T) {
+func TestCreateFreezeTransaction(t *testing.T) {
 	conn := dialNileTestnet(t)
 
-	if _, err := CreateFreezTransaction(conn, fromAddress, core.ResourceCode_ENERGY, big.NewInt(1000000)); err != nil {
-		t.Fatalf("CreateFreezTransaction failed: %v", err)
+	if _, err := CreateFreezeTransaction(conn, fromAddress, core.ResourceCode_ENERGY, big.NewInt(1000000)); err != nil {
+		t.Fatalf("CreateFreezeTransaction failed: %v", err)
 	}
 }
 
@@ -45,9 +45,9 @@ func TestSignTransaction(t *testing.T) {
 	conn := dialNileTestnet(t)
 
 	// Any transaction type works here: transfer, freeze, unfreeze, etc.
-	transaction, err := CreateFreezTransaction(conn, fromAddress, core.ResourceCode_ENERGY, big.NewInt(1000000))
+	transaction, err := CreateFreezeTransaction(conn, fromAddress, core.ResourceCode_ENERGY, big.NewInt(1000000))
 	if err != nil {
-		t.Fatalf("CreateFreezTransaction failed: %v", err)
+		t.Fatalf("CreateFreezeTransaction failed: %v", err)
 	}
 
 	privateKey, err := GeneratePrivateKey()
@@ -63,9 +63,9 @@ func TestSignTransaction(t *testing.T) {
 func TestBroadcastTransaction(t *testing.T) {
 	conn := dialNileTestnet(t)
 
-	transaction, err := CreateFreezTransaction(conn, fromAddress, core.ResourceCode_ENERGY, big.NewInt(1000000))
+	transaction, err := CreateFreezeTransaction(conn, fromAddress, core.ResourceCode_ENERGY, big.NewInt(1000000))
 	if err != nil {
-		t.Fatalf("CreateFreezTransaction failed: %v", err)
+		t.Fatalf("CreateFreezeTransaction failed: %v", err)
 	}
 
 	privateKey, err := PrivateKeyFromHex(fromAddressPrivateKeyHex)

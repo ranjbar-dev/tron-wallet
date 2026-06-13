@@ -32,20 +32,28 @@ func CreateTRC20TransferTransaction(client *client.GrpcClient, from, to, contrac
 	return client.TRC20Send(from, to, contract, amount, feeLimit)
 }
 
-// CreateFreezTransaction builds an unsigned stake (freeze) transaction that locks
+// CreateFreezeTransaction builds an unsigned stake (freeze) transaction that locks
 // TRX to gain bandwidth or energy. Sign it with SignTransaction and publish it
 // with BroadcastTransaction.
+//
+// It uses the TRON Stake 2.0 endpoint (FreezeBalanceV2). The legacy Stake 1.0
+// freeze was disabled on mainnet, so building a freeze with the old endpoint
+// fails with "Contract validate error : freeze v2 is open, old freeze is
+// closed"; using the V2 endpoint here avoids that error.
 //
 // address is the staker's Base58 address. resource selects what the stake
 // produces (core.ResourceCode_ENERGY or core.ResourceCode_BANDWIDTH). amount is
 // the TRX to freeze, in sun.
-func CreateFreezTransaction(client *client.GrpcClient, address string, resource core.ResourceCode, amount *big.Int) (*api.TransactionExtention, error) {
+func CreateFreezeTransaction(client *client.GrpcClient, address string, resource core.ResourceCode, amount *big.Int) (*api.TransactionExtention, error) {
 	return client.FreezeBalanceV2(address, resource, amount.Int64())
 }
 
 // CreateUnfreezeTransaction builds an unsigned unstake (unfreeze) transaction that
 // releases previously frozen TRX. Sign it with SignTransaction and publish it
 // with BroadcastTransaction.
+//
+// It uses the TRON Stake 2.0 endpoint (UnfreezeBalanceV2) and so pairs with
+// CreateFreezeTransaction.
 //
 // address is the staker's Base58 address. resource must match the resource the
 // stake was created for. amount is the TRX to unfreeze, in sun.

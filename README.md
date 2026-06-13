@@ -58,7 +58,7 @@ CreateTransferTransaction(client *client.GrpcClient, from, to string, amount *bi
 
 CreateTRC20TransferTransaction(client *client.GrpcClient, from, to, contract string, amount *big.Int, feeLimit int64) (*api.TransactionExtention, error)
 
-CreateFreezTransaction(client *client.GrpcClient, address string, resource core.ResourceCode, amount *big.Int) (*api.TransactionExtention, error)
+CreateFreezeTransaction(client *client.GrpcClient, address string, resource core.ResourceCode, amount *big.Int) (*api.TransactionExtention, error)
 
 CreateUnfreezeTransaction(client *client.GrpcClient, address string, resource core.ResourceCode, amount *big.Int) (*api.TransactionExtention, error)
 
@@ -67,6 +67,8 @@ SignTransaction(transaction *api.TransactionExtention, privateKey *ecdsa.Private
 BroadcastTransaction(client *client.GrpcClient, transaction *api.TransactionExtention) (*api.Return, error)
 
 ```
+
+`CreateFreezeTransaction` / `CreateUnfreezeTransaction` use the TRON **Stake 2.0** endpoints (`FreezeBalanceV2` / `UnfreezeBalanceV2`). Stake 1.0 was disabled on mainnet, so the legacy freeze returns `freeze v2 is open, old freeze is closed` — these helpers avoid that.
 
 ### Fee explanation
 
