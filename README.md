@@ -73,6 +73,22 @@ Fee ≈ Energy Used × Energy Unit Price (in TRX)
 
 check test files for examples and usage of this package
 
+### Tests
+
+The test suite is split into two layers:
+
+- **Unit tests** are deterministic and run fully offline:
+
+  ```
+  go test ./...
+  ```
+
+- **Integration tests** talk to the live Nile testnet over gRPC and are guarded by a build tag, so they never run by accident:
+
+  ```
+  go test -tags=integration ./...
+  ```
+
 ### TRX Faucet
 
 Follow TronTestnet Twitter account @TronTest2 . Write your address in your tweet and @TronTest2 . They will transfer 10,000 test TRX (usually within five minutes). Each address can only be obtained once a day. If you need TRX for the nile testnet, please add "NILE" in your tweet.
@@ -95,6 +111,10 @@ I simplified this repository https://github.com/fbsobreira repository to create 
 
 - delegate resource transaction 
 
+
+### License
+
+Released under the [MIT License](LICENSE).
 
 ### Donation
 
