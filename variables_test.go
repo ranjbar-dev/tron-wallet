@@ -4,10 +4,9 @@ package tronwallet
 
 import (
 	"testing"
+	"time"
 
 	"github.com/fbsobreira/gotron-sdk/pkg/client"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 )
 
 // nileGrpcEndpoint is the public TRON Nile testnet gRPC node used by the
@@ -24,13 +23,14 @@ var (
 	contractAddress          = "TU2T8vpHZhCNY8fXGVaHyeZrKm8s6HEXWe"
 )
 
-// dialNileTestnet opens a gRPC connection to the Nile testnet for integration
-// tests and registers cleanup. It fails the test if the connection cannot start.
+// dialNileTestnet returns a started client connected to the Nile testnet via the
+// package's own NewGrpcClient, and registers cleanup. It fails the test if the
+// connection cannot start.
 func dialNileTestnet(t *testing.T) *client.GrpcClient {
 	t.Helper()
 
-	conn := client.NewGrpcClient(nileGrpcEndpoint)
-	if err := conn.Start(grpc.WithTransportCredentials(insecure.NewCredentials())); err != nil {
+	conn, err := NewGrpcClient(nileGrpcEndpoint, 10*time.Second, "")
+	if err != nil {
 		t.Fatalf("failed to start gRPC client: %v", err)
 	}
 	t.Cleanup(conn.Stop)

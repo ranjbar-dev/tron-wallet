@@ -36,6 +36,16 @@ PublicKeyToAddressBase58(publicKey *ecdsa.PublicKey) string
 
 ```
 
+### grpc_client.go
+
+Connect to a TRON node. `NewGrpcClient` returns a **started** client with the optional TronGrid API key already applied, so it is ready to pass straight to the transaction helpers. Remember to `defer client.Stop()`.
+
+```
+
+NewGrpcClient(grpcAddress string, timeout time.Duration, apiToken string) (*client.GrpcClient, error)
+
+```
+
 ### transaction.go
 
 Avaiable functions related to transaction 
@@ -71,7 +81,56 @@ Fee ≈ Energy Used × Energy Unit Price (in TRX)
 
 ### Example 
 
-check test files for examples and usage of this package
+Send 1 TRX on the Nile testnet — create, sign and broadcast:
+
+```go
+package main
+
+import (
+	"log"
+	"math/big"
+	"time"
+
+	tronwallet "github.com/ranjbar-dev/tron-wallet"
+)
+
+func main() {
+	// Connect (apiToken is optional; pass "" to run without one).
+	client, err := tronwallet.NewGrpcClient("grpc.nile.trongrid.io:50051", 10*time.Second, "")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer client.Stop()
+
+	// Load the sender's key.
+	privateKey, err := tronwallet.PrivateKeyFromHex("YOUR_PRIVATE_KEY_HEX")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	from := "TQm6MTevKxyyKXzudM6UGjYqxnUmx2HiY3"
+	to := "TEkxPcAR7GtkTvr8uQFgUsaFenFE2djkHB"
+
+	// 1) create — amount is in sun (1 TRX = 1,000,000 sun).
+	tx, err := tronwallet.CreateTransferTransaction(client, from, to, big.NewInt(1_000_000))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// 2) sign
+	tx, err = tronwallet.SignTransaction(tx, privateKey)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// 3) broadcast
+	if _, err := tronwallet.BroadcastTransaction(client, tx); err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+See the test files for more examples and usage of this package.
 
 ### Tests
 
