@@ -70,6 +70,13 @@ BroadcastTransaction(client *client.GrpcClient, transaction *api.TransactionExte
 
 `CreateFreezeTransaction` / `CreateUnfreezeTransaction` use the TRON **Stake 2.0** endpoints (`FreezeBalanceV2` / `UnfreezeBalanceV2`). Stake 1.0 was disabled on mainnet, so the legacy freeze returns `freeze v2 is open, old freeze is closed` — these helpers avoid that.
 
+### Amounts and precision
+
+Every amount is expressed in the asset's smallest unit and is passed as a `*big.Int`:
+
+- **TRC20** transfers support **arbitrary precision** — the amount is forwarded to the contract as a `*big.Int`, so 18-decimal tokens and values larger than `int64` work as expected.
+- **TRX** transfers and **staking** are bounded by the TRON protocol to the `int64` range (the whole TRX supply fits comfortably), so those amounts are converted to `int64`. The conversion is guarded: a `nil`, negative, or out-of-range amount returns a clear error instead of silently overflowing.
+
 ### Fee explanation
 
 - TRX transfer: if account has enough bandwidth to covert trasaction fee it is free( 5000 points ), if not it will cost 0.1 TRX. 

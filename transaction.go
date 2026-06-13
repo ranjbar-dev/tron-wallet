@@ -17,9 +17,15 @@ import (
 // SignTransaction and publish it with BroadcastTransaction.
 //
 // from and to are Base58 addresses (e.g. "TTTA2rCqLTDAEEb4UwPD34qLiJ6AUhgzRH").
-// amount is denominated in sun (1 TRX = 1,000,000 sun).
+// amount is denominated in sun (1 TRX = 1,000,000 sun) and must fit in an int64,
+// which comfortably covers the entire TRX supply.
 func CreateTransferTransaction(client *client.GrpcClient, from, to string, amount *big.Int) (*api.TransactionExtention, error) {
-	return client.Transfer(from, to, amount.Int64())
+	value, err := amountToInt64(amount)
+	if err != nil {
+		return nil, fmt.Errorf("transfer amount: %w", err)
+	}
+
+	return client.Transfer(from, to, value)
 }
 
 // CreateTRC20TransferTransaction builds an unsigned TRC20 token transfer. Sign it
@@ -27,8 +33,14 @@ func CreateTransferTransaction(client *client.GrpcClient, from, to string, amoun
 //
 // from and to are Base58 addresses; contract is the TRC20 contract address in
 // Base58. amount is in the token's smallest unit (amount = value * 10^decimals).
+// Because token amounts can exceed an int64 (for example an 18-decimal token),
+// amount is passed through as a *big.Int and supports arbitrary precision.
 // feeLimit is the maximum fee, in sun, the sender will pay for execution.
 func CreateTRC20TransferTransaction(client *client.GrpcClient, from, to, contract string, amount *big.Int, feeLimit int64) (*api.TransactionExtention, error) {
+	if err := validateAmount(amount); err != nil {
+		return nil, fmt.Errorf("trc20 amount: %w", err)
+	}
+
 	return client.TRC20Send(from, to, contract, amount, feeLimit)
 }
 
@@ -43,9 +55,14 @@ func CreateTRC20TransferTransaction(client *client.GrpcClient, from, to, contrac
 //
 // address is the staker's Base58 address. resource selects what the stake
 // produces (core.ResourceCode_ENERGY or core.ResourceCode_BANDWIDTH). amount is
-// the TRX to freeze, in sun.
+// the TRX to freeze, in sun, and must fit in an int64.
 func CreateFreezeTransaction(client *client.GrpcClient, address string, resource core.ResourceCode, amount *big.Int) (*api.TransactionExtention, error) {
-	return client.FreezeBalanceV2(address, resource, amount.Int64())
+	value, err := amountToInt64(amount)
+	if err != nil {
+		return nil, fmt.Errorf("freeze amount: %w", err)
+	}
+
+	return client.FreezeBalanceV2(address, resource, value)
 }
 
 // CreateUnfreezeTransaction builds an unsigned unstake (unfreeze) transaction that
@@ -56,9 +73,15 @@ func CreateFreezeTransaction(client *client.GrpcClient, address string, resource
 // CreateFreezeTransaction.
 //
 // address is the staker's Base58 address. resource must match the resource the
-// stake was created for. amount is the TRX to unfreeze, in sun.
+// stake was created for. amount is the TRX to unfreeze, in sun, and must fit in
+// an int64.
 func CreateUnfreezeTransaction(client *client.GrpcClient, address string, resource core.ResourceCode, amount *big.Int) (*api.TransactionExtention, error) {
-	return client.UnfreezeBalanceV2(address, resource, amount.Int64())
+	value, err := amountToInt64(amount)
+	if err != nil {
+		return nil, fmt.Errorf("unfreeze amount: %w", err)
+	}
+
+	return client.UnfreezeBalanceV2(address, resource, value)
 }
 
 // SignTransaction signs transaction in place with privateKey and returns it. Call
